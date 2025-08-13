@@ -68,31 +68,17 @@ ticketing-system/
 - **Agent**: sees **only their assigned tickets**, can change status, comment, reassign tickets **they are assigned to**.
 - **User**: create/manage **their own tickets**, can set status to Resolved/Closed for their tickets, add comments, upload files, and rate the resolution.
 
-## ✉️ Email Notifications (Optional)
-
-Set environment variables to enable SMTP:
-```
-MAIL_SERVER=smtp.yourhost.com
-MAIL_PORT=587
-MAIL_USE_TLS=true
-MAIL_USERNAME=your-user
-MAIL_PASSWORD=your-pass
-MAIL_DEFAULT_SENDER=noreply@yourhost.com
-```
-If not configured, notifications are **printed to the console**.
-
 ## 🧪 Notes
+I have not created the task on:
+● Backend:
+○ Java/Kotlin
+○ Spring Boot
+○ Postgresql
+● Frontend:
+○ Next.js (React-based framework)
 
-- Allowed file types: png, jpg, jpeg, gif, pdf, txt, log, zip, doc, docx. Max 16MB.
-- CSRF is not included to keep things simple; add `Flask-WTF` for production deployments.
-- For production, change `SECRET_KEY` and use a persistent database path.
+I am trying to learn the above tech stack that's why I am doing the task in flask and Sqlite.
 
-## 🗺️ Roadmap / Ideas
 
-- Pagination for large ticket sets.
-- Email templates & background workers.
-- Advanced search, labels, and SLA timers.
-- REST API and a SPA frontend.
-- CSRF protection and permissions fine-tuning.
 ```
 
