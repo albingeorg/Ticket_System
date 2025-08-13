@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Admin: Manage Users</h2>
+
+<form class="card" method="post" action="{{ url_for('add_user') }}">
+  <div class="grid">
+    <div>
+      <label>Name</label>
+      <input type="text" name="name" required>
+    </div>
+    <div>
+      <label>Email</label>
+      <input type="email" name="email" required>
+    </div>
+    <div>
+      <label>Password</label>
+      <input type="text" name="password" required>
+    </div>
+    <div>
+      <label>Role</label>
+      <select name="role">
+        <option value="user">User</option>
+        <option value="agent">Support Agent</option>
+        <option value="admin">Admin</option>
+      </select>
+    </div>
+  </div>
+  <button type="submit">Add User</button>
+</form>
+
+<table class="table">
+  <thead>
+    <tr><th>#</th><th>Name</th><th>Email</th><th>Role</th><th></th></tr>
+  </thead>
+  <tbody>
+    {% for u in users %}
+    <tr>
+      <td>{{u.id}}</td>
+      <td>{{u.name}}</td>
+      <td>{{u.email}}</td>
+      <td>{{u.role}}</td>
+      <td>
+        {% if user.id != u.id %}
+        <form method="post" action="{{ url_for('delete_user', user_id=u.id) }}" onsubmit="return confirm('Delete user?');">
+          <button class="danger">Delete</button>
+        </form>
+        {% else %}-{% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

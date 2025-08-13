@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Ticket #{{ticket.id}} — {{ticket.subject}}</h2>
+<div class="card">
+  <div class="grid">
+    <div><strong>Status:</strong> {{ticket.status}}</div>
+    <div><strong>Priority:</strong> {{ticket.priority}}</div>
+    <div><strong>Owner:</strong> {{ticket.owner.name}}</div>
+    <div><strong>Assignee:</strong> {{ticket.assignee.name if ticket.assignee else "-"}}</div>
+    <div><strong>Created:</strong> {{ ticket.created_at.strftime("%Y-%m-%d %H:%M") }}</div>
+    <div><strong>Updated:</strong> {{ ticket.updated_at.strftime("%Y-%m-%d %H:%M") }}</div>
+  </div>
+</div>
+
+{% if user.role in ['admin','agent'] or (user.role=='user' and ticket.owner_id==user.id) %}
+<form class="card" method="post" action="{{ url_for('update_status', ticket_id=ticket.id) }}">
+  <label>Change Status</label>
+  <select name="status">
+    {% for s in ["Open","In Progress","Resolved","Closed"] %}
+      <option value="{{s}}" {% if ticket.status==s %}selected{% endif %}>{{s}}</option>
+    {% endfor %}
+  </select>
+  <button type="submit">Update</button>
+</form>
+{% endif %}
+
+{% if user.role in ['admin'] or (user.role=='agent' and ticket.assignee_id==user.id) %}
+<form class="card" method="post" action="{{ url_for('assign_ticket', ticket_id=ticket.id) }}">
+  <label>Reassign to Agent</label>
+  <select name="assignee_id">
+    {% for a in agents %}
+      <option value="{{ a.id }}" {% if ticket.assignee_id==a.id %}selected{% endif %}>{{ a.name }} ({{ a.email }})</option>
+    {% endfor %}
+  </select>
+  <button type="submit">Reassign</button>
+</form>
+{% endif %}
+
+<h3>Attachments</h3>
+<form class="card" method="post" enctype="multipart/form-data" action="{{ url_for('upload_file', ticket_id=ticket.id) }}">
+  <input type="file" name="file">
+  <button type="submit">Upload</button>
+</form>
+<ul>
+  {% for a in ticket.attachments %}
+    <li><a href="{{ url_for('download_attachment', attachment_id=a.id) }}">{{ a.original_name }}</a> ({{ a.uploaded_at.strftime("%Y-%m-%d %H:%M") }})</li>
+  {% else %}
+    <li>No attachments yet.</li>
+  {% endfor %}
+</ul>
+
+<h3>Comments</h3>
+<form class="card" method="post">
+  <textarea name="comment" rows="3" placeholder="Add a comment..."></textarea>
+  <button type="submit">Post Comment</button>
+</form>
+<ul class="comments">
+  {% for c in ticket.comments|sort(attribute='created_at') %}
+    <li>
+      <div><strong>{{ c.user.name }}</strong> <small>{{ c.created_at.strftime("%Y-%m-%d %H:%M") }}</small></div>
+      <div>{{ c.content }}</div>
+    </li>
+  {% else %}
+    <li>No comments yet.</li>
+  {% endfor %}
+</ul>
+
+<h3>History</h3>
+<ul class="history">
+  {% for h in ticket.history|sort(attribute='timestamp') %}
+    <li><small>{{ h.timestamp.strftime("%Y-%m-%d %H:%M") }}</small> — <strong>{{ h.performed_by.name }}</strong>: {{ h.action }}</li>
+  {% else %}
+    <li>No history yet.</li>
+  {% endfor %}
+</ul>
+
+{% if user.role=='user' and ticket.owner_id==user.id and ticket.status in ['Resolved','Closed'] %}
+<h3>Rate Resolution</h3>
+<form class="card" method="post" action="{{ url_for('rate_ticket', ticket_id=ticket.id) }}">
+  <label>Stars (1-5)</label>
+  <input type="number" min="1" max="5" name="stars" value="{{ ticket.rating.stars if ticket.rating else 5 }}">
+  <label>Feedback (optional)</label>
+  <textarea name="feedback" rows="3">{{ ticket.rating.feedback if ticket.rating else "" }}</textarea>
+  <button type="submit">Submit Rating</button>
+</form>
+{% endif %}
+{% endblock %}

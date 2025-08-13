@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>New Ticket</h2>
+<form class="card" method="post">
+  <label>Subject</label>
+  <input type="text" name="subject" required>
+  <label>Description</label>
+  <textarea name="description" rows="6" required></textarea>
+  <label>Priority</label>
+  <select name="priority">
+    {% for p in ["Low","Medium","High","Urgent"] %}
+      <option value="{{p}}">{{p}}</option>
+    {% endfor %}
+  </select>
+  {% if user.role == 'admin' %}
+  <label>Assign to Agent (optional)</label>
+  <select name="assignee_id">
+    <option value="">-- None --</option>
+    {% for a in users %}
+      <option value="{{ a.id }}">{{ a.name }} ({{ a.email }})</option>
+    {% endfor %}
+  </select>
+  {% endif %}
+  <button type="submit">Create Ticket</button>
+</form>
+{% endblock %}
