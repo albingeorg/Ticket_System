@@ -69,9 +69,3 @@ ticketing-system/
 - **User**: create/manage **their own tickets**, can set status to Resolved/Closed for their tickets, add comments, upload files, and rate the resolution.
 
 
-
-I am trying to learn the above tech stack that's why I am doing the task in flask and Sqlite.
-
-
-```
-
