@@ -68,14 +68,7 @@ ticketing-system/
 - **Agent**: sees **only their assigned tickets**, can change status, comment, reassign tickets **they are assigned to**.
 - **User**: create/manage **their own tickets**, can set status to Resolved/Closed for their tickets, add comments, upload files, and rate the resolution.
 
-#  Note
-I have not created the task on:
-● Backend:
-○ Java/Kotlin
-○ Spring Boot
-○ Postgresql
-● Frontend:
-○ Next.js (React-based framework)
+
 
 I am trying to learn the above tech stack that's why I am doing the task in flask and Sqlite.
 
